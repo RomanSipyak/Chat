@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Chat.Infrastructure.AppContext.Persistence;
+using Chat.WebApi.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,7 +30,7 @@ namespace Chat.WebApi
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AppDbConnection")));
-
+            services.ConfigureSwagger(Configuration);
             services.AddControllers();
         }
 
@@ -40,6 +41,30 @@ namespace Chat.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+            options.SwaggerEndpoint(Configuration["Swagger:Endpoint"],
+                string.Concat("ChatApi", " ", "v1"));
+            });
+
+          /*  //swagger configure
+            var swaggerOptions = new Options.SwaggerOptions();
+            Configuration.GetSection(nameof(Options.SwaggerOptions)).Bind(swaggerOptions);
+            app.UseSwagger(option => { option.RouteTemplate = swaggerOptions.JsonRoute; });
+            app.UseSwaggerUI(options => { options.SwaggerEndpoint(swaggerOptions.UIEndPoint, swaggerOptions.Description); });
+            //end of swagger configure*/
+
+
+
+            /*app.UseSwagger();
+
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint(Configuration[GeneralApiConstants.Configuration_SwaggerEndpoint],
+                    string.Concat(GeneralApiConstants.SwaggerApiTitle, " ", GeneralApiConstants.SwaggerApiVersion));
+            });*/
 
             app.UseHttpsRedirection();
 
