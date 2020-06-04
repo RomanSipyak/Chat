@@ -1,4 +1,6 @@
-﻿using Chat.Contracts.Constats.GeneralConstants;
+﻿using AutoMapper;
+using Chat.BusinessLogic.Mapping;
+using Chat.Contracts.Constats.GeneralConstants;
 using Chat.Infrastructure.AppContext.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -79,6 +81,13 @@ namespace Chat.WebApi.Extensions
                            .AllowAnyHeader()
                            .AllowAnyMethod();
                 }));
+        }
+
+        public static void ConfigurationMapper(this IServiceCollection services)
+        {
+            MapperConfiguration mappingConfig = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile()));
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
         }
     }
 }

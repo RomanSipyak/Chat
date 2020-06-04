@@ -30,6 +30,7 @@ namespace Chat.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigurationDataBase(Configuration);
+            services.ConfigurationMapper();
             services.ConfigureSwagger(Configuration);
             services.AddControllers();
         }
