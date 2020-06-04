@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Chat.Contracts.Constats.GeneralConstants;
+using Chat.Infrastructure.AppContext.Persistence;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
@@ -16,12 +19,12 @@ namespace Chat.WebApi.Extensions
         {
             services.AddSwaggerGen(c =>
             {
-               c.SwaggerDoc(cofiguration["Swagger:Doc"],
-                            new OpenApiInfo
-                            {
-                                Title = "ChatApi",
-                                Version = "v1"
-                            });
+                c.SwaggerDoc(cofiguration[ApiConstants.Configuration_SwaggerDoc],
+                             new OpenApiInfo
+                             {
+                                 Title = ApiConstants.Configuration_SwaggerApiTitle,
+                                 Version = ApiConstants.Configuration_SwaggerApiVersion
+                             }); ;
 
                // Set the comments path for the Swagger JSON and UI.
                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -33,11 +36,11 @@ namespace Chat.WebApi.Extensions
                    "Bearer",
                    new OpenApiSecurityScheme
                    {
-                       Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
-                       Name = "Authorization",
+                       Description = ApiConstants.Configuration_SwaggerApiSecuritySchemeDescription,
+                       Name = ApiConstants.Configuration_SwaggerApiSecuritySchemeName,
                        In = ParameterLocation.Header,
                        Type = SecuritySchemeType.ApiKey,
-                       Scheme = "Bearer",
+                       Scheme = ApiConstants.Configuration_SwaggerBearer,
                    });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
@@ -48,10 +51,10 @@ namespace Chat.WebApi.Extensions
                              Reference = new OpenApiReference
                              {
                                  Type = ReferenceType.SecurityScheme,
-                                 Id = "Bearer"
+                                 Id = ApiConstants.Configuration_SwaggerBearer
                              },
-                             Scheme = "oath2",
-                             Name = "Bearer",
+                             Scheme = ApiConstants.Configuration_SwaggerApiSecurityScheme,
+                             Name = ApiConstants.Configuration_SwaggerBearer,
                              In = ParameterLocation.Header
                          },
                          new List<String>()
@@ -59,6 +62,12 @@ namespace Chat.WebApi.Extensions
                    });
                 #endregion setting for bearer
             });
+        }
+
+        public static void ConfigurationDataBase(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString(ApiConstants.Configuration_DbConnection)));
         }
     }
 }

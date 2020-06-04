@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chat.Contracts.Constats.GeneralConstants;
 using Chat.Infrastructure.AppContext.Persistence;
 using Chat.WebApi.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -28,8 +29,7 @@ namespace Chat.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AppDbConnection")));
+            services.ConfigurationDataBase(Configuration);
             services.ConfigureSwagger(Configuration);
             services.AddControllers();
         }
@@ -45,8 +45,8 @@ namespace Chat.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-            options.SwaggerEndpoint(Configuration["Swagger:Endpoint"],
-                string.Concat("ChatApi", " ", "v1"));
+            options.SwaggerEndpoint(Configuration[ApiConstants.Configuration_SwaggerEndpoint],
+                string.Concat(ApiConstants.Configuration_SwaggerApiTitle, " ", ApiConstants.Configuration_SwaggerApiVersion));
             });
 
           /*  //swagger configure
