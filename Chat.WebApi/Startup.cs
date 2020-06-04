@@ -49,6 +49,7 @@ namespace Chat.WebApi
                 string.Concat(ApiConstants.Configuration_SwaggerApiTitle, " ", ApiConstants.Configuration_SwaggerApiVersion));
             });
 
+            app.UseCors(ApiConstants.PolicyForCors);
           /*  //swagger configure
             var swaggerOptions = new Options.SwaggerOptions();
             Configuration.GetSection(nameof(Options.SwaggerOptions)).Bind(swaggerOptions);

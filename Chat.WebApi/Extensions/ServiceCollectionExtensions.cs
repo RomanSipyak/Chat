@@ -69,5 +69,16 @@ namespace Chat.WebApi.Extensions
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString(ApiConstants.Configuration_DbConnection)));
         }
+
+        public static void ConfigurationCors(this IServiceCollection services)
+        {
+            services.AddCors(o => o.AddPolicy("Policy",
+                builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                }));
+        }
     }
 }

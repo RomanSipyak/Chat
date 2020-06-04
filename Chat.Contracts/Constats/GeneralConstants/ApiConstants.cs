@@ -22,5 +22,7 @@ namespace Chat.Contracts.Constats.GeneralConstants
         #region DbConstants
         public const string Configuration_DbConnection = "AppDbConnection";
         #endregion DbConstants
+
+        public const string PolicyForCors = "Policy";
     }
 }
