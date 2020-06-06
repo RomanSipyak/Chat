@@ -24,5 +24,6 @@ namespace Chat.Contracts.Constats.GeneralConstants
         #endregion DbConstants
 
         public const string PolicyForCors = "Policy";
+        public const string Token = "Token";
     }
 }

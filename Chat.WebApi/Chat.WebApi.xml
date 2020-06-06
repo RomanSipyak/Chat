@@ -4,5 +4,19 @@
         <name>Chat.WebApi</name>
     </assembly>
     <members>
+        <member name="M:Chat.WebApi.Controllers.AccountController.RegisterUser(Chat.Contracts.Dtos.User.UserRegisterDto)">
+            <summary>
+            Registers new user
+            </summary>
+            <param name="registerDto">Instance of UserRegisterDto type with user`s info</param>
+            <returns>An ActionResult of type UserDto</returns>
+        </member>
+        <member name="M:Chat.WebApi.Controllers.AccountController.LoginUser(Chat.Contracts.Dtos.User.UserLoginDto)">
+            <summary>
+            Login method for user
+            </summary>
+            <param name="userLoginDto">Instance of UserLoginDto type with user`s credentials</param>
+            <returns>An ActionResult of type UserLogedDto with access token and user`s info</returns>
+        </member>
     </members>
 </doc>

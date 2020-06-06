@@ -29,9 +29,12 @@ namespace Chat.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.ConfigurationServices();
             services.ConfigurationDataBase(Configuration);
             services.ConfigurationMapper();
             services.ConfigureSwagger(Configuration);
+            services.ConfigAuthenticate(Configuration);
+            services.ConfigIdentity();
             services.AddControllers();
         }
 
@@ -49,14 +52,15 @@ namespace Chat.WebApi
             options.SwaggerEndpoint(Configuration[ApiConstants.Configuration_SwaggerEndpoint],
                 string.Concat(ApiConstants.Configuration_SwaggerApiTitle, " ", ApiConstants.Configuration_SwaggerApiVersion));
             });
-
+            //Policy extract in config file
             app.UseCors(ApiConstants.PolicyForCors);
-          /*  //swagger configure
-            var swaggerOptions = new Options.SwaggerOptions();
-            Configuration.GetSection(nameof(Options.SwaggerOptions)).Bind(swaggerOptions);
-            app.UseSwagger(option => { option.RouteTemplate = swaggerOptions.JsonRoute; });
-            app.UseSwaggerUI(options => { options.SwaggerEndpoint(swaggerOptions.UIEndPoint, swaggerOptions.Description); });
-            //end of swagger configure*/
+
+            /*  //swagger configure
+              var swaggerOptions = new Options.SwaggerOptions();
+              Configuration.GetSection(nameof(Options.SwaggerOptions)).Bind(swaggerOptions);
+              app.UseSwagger(option => { option.RouteTemplate = swaggerOptions.JsonRoute; });
+              app.UseSwaggerUI(options => { options.SwaggerEndpoint(swaggerOptions.UIEndPoint, swaggerOptions.Description); });
+              //end of swagger configure*/
 
 
 
@@ -71,6 +75,8 @@ namespace Chat.WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
