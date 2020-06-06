@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Chat.Contracts.Dtos.User;
+using Chat.Contracts.Entity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,8 +11,8 @@ namespace Chat.BusinessLogic.Mapping
     {
         public MappingProfile()
         {
-            /*CreateMap<Myclass, SomeDto>()
-              .ReverseMap();*/
+            CreateMap<User, UserRegisterDto>().ReverseMap();
+            CreateMap<User, UserDto>().ReverseMap();
         }
     }
 }
