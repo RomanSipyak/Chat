@@ -1,4 +1,5 @@
 ﻿using Chat.Contracts.Entity;
+using Chat.Infrastructure.AppContext.Extentions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,6 +24,7 @@ namespace Chat.Infrastructure.AppContext.Persistence
         {
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            builder.SeedData();
         }
     }
 }
