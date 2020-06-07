@@ -32,6 +32,7 @@ namespace Chat.WebApi.Extensions
         {
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<IMessagesService, MessagesService>();
         }
 
         public static void ConfigureSwagger(this IServiceCollection services, IConfiguration cofiguration)

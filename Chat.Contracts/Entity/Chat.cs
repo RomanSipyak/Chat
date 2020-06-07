@@ -10,6 +10,7 @@ namespace Chat.Contracts.Entity
         public ICollection<UserChat> UserChats { get; set; }
         public ICollection<ChatMessage> ChatMessages { get; set; }
         public bool Public { get; set; }
+        public bool DefaultChat { get; set; }
         public string Title { get; set; }
     }
 }

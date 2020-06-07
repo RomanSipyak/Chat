@@ -10,5 +10,6 @@ namespace Chat.Contracts.Entity
         public Chat Chat { get; set; }
         public int MessageId { get; set; }
         public Message Message { get; set; }
+        public DateTime? DateSend { get; set; }
     }
 }
