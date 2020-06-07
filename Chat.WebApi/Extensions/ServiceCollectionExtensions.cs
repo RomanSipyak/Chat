@@ -5,6 +5,7 @@ using Chat.BusinessLogic.Services;
 using Chat.Contracts.ConfigurationObjects;
 using Chat.Contracts.Constats.GeneralConstants;
 using Chat.Contracts.Entity;
+using Chat.Contracts.Interfaces;
 using Chat.Contracts.Interfaces.Services;
 using Chat.Infrastructure.AppContext.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -32,7 +33,9 @@ namespace Chat.WebApi.Extensions
         {
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<IChatService, ChatService>();
             services.AddTransient<IMessagesService, MessagesService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         public static void ConfigureSwagger(this IServiceCollection services, IConfiguration cofiguration)

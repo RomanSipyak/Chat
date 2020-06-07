@@ -18,5 +18,12 @@
             <param name="userLoginDto">Instance of UserLoginDto type with user`s credentials</param>
             <returns>An ActionResult of type UserLogedDto with access token and user`s info</returns>
         </member>
+        <member name="M:Chat.WebApi.Controllers.ChatController.ConnectToChat(Chat.Contracts.Dtos.Chat.ConnectChatDto)">
+            <summary>
+            This method for add authenticated user to public chat 
+            </summary>
+            <param name="connectChatDto">Consist of Title and Id Chat. Id is required parameter</param>
+            <returns>Status</returns>
+        </member>
     </members>
 </doc>
