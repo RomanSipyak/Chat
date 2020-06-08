@@ -16,13 +16,20 @@ namespace Chat.Infrastructure.AppContext.Persistence.Repositories
 
         public async Task<Chat.Contracts.Entity.Chat> GetChatByIdWithAllIncludes(int Id)
         {
-            return await _dbContext.Chats
-                            .Where(ct => ct.Id == Id)
-                            .Include(ct => ct.UserChats)
-                            .ThenInclude(uct => uct.User)
-                            .Include(ct => ct.ChatMessages)
-                            .ThenInclude(ctm => ctm.Message)
-                            .FirstOrDefaultAsync();
+            return await _dbContext.Chats.
+                           Where(ch => ch.Id == Id)
+                          .Include(ct => ct.UserChats)
+                          .ThenInclude(uct => uct.User)
+                          .Include(ct => ct.ChatMessages)
+                          .ThenInclude(ctm => ctm.Message)
+                          .ThenInclude(ms => ms.Replies)
+                          .Include(ct => ct.ChatMessages)
+                          .ThenInclude(ctm => ctm.Message)
+                          .ThenInclude(ms => ms.ParrentMessage)
+                          .Include(ct => ct.ChatMessages)
+                          .ThenInclude(ctm => ctm.Message)
+                          .ThenInclude(ms => ms.Sender)
+                          .FirstOrDefaultAsync();
         }
     }
 }

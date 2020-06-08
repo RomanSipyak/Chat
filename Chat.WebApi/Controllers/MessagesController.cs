@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Chat.Contracts.Dtos;
 using Chat.Contracts.Dtos.Message;
 using Chat.Contracts.Interfaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -40,7 +41,7 @@ namespace Chat.WebApi.Controllers
                 var userId = this.User.Claims.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
                 await _messagesService.SendMessageToChatAsync(sendMessageDto, userId);
                 return Ok("Your Message success send");
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 _logger.Error(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
@@ -83,13 +84,61 @@ namespace Chat.WebApi.Controllers
 
         [HttpPatch("UpdateMessage")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult> DeleteMessage(UpdateMessageDto updateMessageDto)
+        public async Task<ActionResult> UpdateMessage(UpdateMessageDto updateMessageDto)
         {
             try
             {
                 var userId = this.User.Claims.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
                 await _messagesService.UpdateMessage(updateMessageDto, userId);
                 return Ok("Your Message is updated");
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Reply for message chat.
+        /// If you set ReplyForSenderInPrivateChat = true;
+        /// We try to find this chat by ReplyChatId. 
+        /// If this chat exists and it is not public and you are not attached for this chat or reciverUser 
+        /// will not be attached we will be try to find default private chat for you and your reciever and send reply there. 
+        /// Another way we will be create this chat attache thre you and your reciever and send message there. 
+        /// If Chat not exist we will try find default chat and make the same action that describe above.
+        /// If you set ReplyForSenderInPrivateChat = false;
+        /// We try to find this chat by ReplyChatId. 
+        /// If this chat exists we send a reply message for here if this message that we want to be replied attached for this chat and you are attached also for this chat.
+        /// </summary>
+        /// <param name="replyMessageDto">Dto for reply message</param>
+        /// <returns>ActionResult with staus 200 if all good</returns>
+        [HttpPost("ReplyOnMessage")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult> ReplyForMessage(ReplyMessageDto replyMessageDto)
+        {
+            try
+            {
+                var userId = this.User.Claims.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+                await _messagesService.ReplyMessage(replyMessageDto, userId);
+                return Ok("Your reply on message");
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("GetMessagesForChat")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<GetMessageDto>> GeMessagesForChat(int ChatId, [FromQuery] PaginationFilterDto pagination)
+        {
+            try
+            {
+                var userId = this.User.Claims.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+
+                return Ok(await _messagesService.GetAllMessagesForChat(ChatId,userId, pagination));
             }
             catch (Exception ex)
             {

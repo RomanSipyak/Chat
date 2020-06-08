@@ -36,6 +36,10 @@ namespace Chat.WebApi.Extensions
             services.AddTransient<IChatService, ChatService>();
             services.AddTransient<IMessagesService, MessagesService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddControllersWithViews()
+                    .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
         }
 
         public static void ConfigureSwagger(this IServiceCollection services, IConfiguration cofiguration)

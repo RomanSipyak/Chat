@@ -25,5 +25,21 @@
             <param name="connectChatDto">Consist of Title and Id Chat. Id is required parameter</param>
             <returns>Status</returns>
         </member>
+        <member name="M:Chat.WebApi.Controllers.MessagesController.ReplyForMessage(Chat.Contracts.Dtos.Message.ReplyMessageDto)">
+            <summary>
+            Reply for message chat.
+            If you set ReplyForSenderInPrivateChat = true;
+            We try to find this chat by ReplyChatId. 
+            If this chat exists and it is not public and you are not attached for this chat or reciverUser 
+            will not be attached we will be try to find default private chat for you and your reciever and send reply there. 
+            Another way we will be create this chat attache thre you and your reciever and send message there. 
+            If Chat not exist we will try find default chat and make the same action that describe above.
+            If you set ReplyForSenderInPrivateChat = false;
+            We try to find this chat by ReplyChatId. 
+            If this chat exists we send a reply message for here if this message that we want to be replied attached for this chat and you are attached also for this chat.
+            </summary>
+            <param name="replyMessageDto">Dto for reply message</param>
+            <returns>ActionResult with staus 200 if all good</returns>
+        </member>
     </members>
 </doc>
