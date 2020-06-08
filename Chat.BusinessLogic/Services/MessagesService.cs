@@ -190,5 +190,31 @@ namespace Chat.BusinessLogic.Services
                 return;
             }
         }
+        public async Task DeleteMessage(DeleteMessageDto deleteMessageDto, string userId)
+        {
+            if(deleteMessageDto.DeleteForAll == false && deleteMessageDto.DeleteForSender == false)
+            {
+                throw new ArgumentException("You need to chose at least one option");
+            }
+            var message = await _unitOfWork.MessageRepository.GetByIdAsync(deleteMessageDto.MessageID);
+
+            if(message == null)
+            {
+                throw new Exception("Message doesn't exist");
+            }
+
+            if(message.SenderId != userId || message.DeletedForAll || message.DeletedForSender)
+            {
+                throw new Exception("You can't delete this message");
+            }
+
+            using(var transaction = await _unitOfWork.BeginTransactionAsync())
+            {
+                message.DeletedForAll = deleteMessageDto.DeleteForAll;
+                message.DeletedForSender = deleteMessageDto.DeleteForSender;
+                await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
+            }
+        }
     }
 }

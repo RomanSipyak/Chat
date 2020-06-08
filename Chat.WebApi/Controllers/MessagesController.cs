@@ -56,6 +56,22 @@ namespace Chat.WebApi.Controllers
                 var userId = this.User.Claims.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
                 await _messagesService.SendMessageToUserAsync(sendMessageToUserDto, userId);
                 return Ok("Your Message succes send");
+        [HttpDelete("DeleteMessage")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult> DeleteMessage(DeleteMessageDto deleteMessageDto)
+        {
+            try
+            {
+                var userId = this.User.Claims.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+                await _messagesService.DeleteMessage(deleteMessageDto, userId);
+                return Ok("Your Message is deleted");
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
             }
             catch (Exception ex)
             {
