@@ -97,16 +97,16 @@ namespace Chat.BusinessLogic.Services
             if (!string.IsNullOrEmpty(sendMessageToUserDto.SendToUserId))
             {
                 user = await _userManager.FindByIdAsync(sendMessageToUserDto.SendToUserId);
-                
-                if(user == null && string.IsNullOrEmpty(sendMessageToUserDto.SendToEmail))
+
+                if (user == null && string.IsNullOrEmpty(sendMessageToUserDto.SendToEmail))
                 {
                     throw new ArgumentException("We can't find your user for message");
                 }
 
-                if(user == null && !string.IsNullOrEmpty(sendMessageToUserDto.SendToEmail))
+                if (user == null && !string.IsNullOrEmpty(sendMessageToUserDto.SendToEmail))
                 {
                     user = await _userManager.FindByEmailAsync(sendMessageToUserDto.SendToEmail);
-                    if(user == null)
+                    if (user == null)
                     {
                         throw new ArgumentException("We can't find your user for message");
                     }
@@ -121,9 +121,9 @@ namespace Chat.BusinessLogic.Services
                 }
             }
             #endregion find user to send
-            var chatForSend = sendMessageToUserDto.ChatId == null ? null : await _unitOfWork.ChatRepository.GetByIdAsync(sendMessageToUserDto.ChatId.Value);
+            var chatForSend = sendMessageToUserDto.ChatId == null ? null : await _unitOfWork.ChatRepository.GetChatByIdWithAllIncludes(sendMessageToUserDto.ChatId.Value);
 
-            if(chatForSend != null && chatForSend.Public && chatForSend.UserChats.Any(uch => uch.UserId == user.Id))
+            if (chatForSend != null && chatForSend.Public && ChatContainUser(user, chatForSend).Value)
             {
                 await SendMessageToChatAsync(
                            new SendMessageToChatDto
@@ -136,9 +136,9 @@ namespace Chat.BusinessLogic.Services
                 return;
             }
 
-            if(chatForSend != null && !chatForSend.Public)
+            if (chatForSend != null && !chatForSend.Public)
             {
-                if(chatForSend.UserChats.Any(uch => uch.UserId == SenderId) && chatForSend.UserChats.Any(uch => uch.UserId == user.Id))
+                if (ChatContainUser(SenderId, chatForSend).Value && ChatContainUser(user, chatForSend).Value)
                 {
                     await SendMessageToChatAsync(
                             new SendMessageToChatDto
@@ -153,7 +153,7 @@ namespace Chat.BusinessLogic.Services
             }
             chatForSend = _unitOfWork.ChatRepository.Find(ch => ch.DefaultChat && ch.Public == sendMessageToUserDto.PublicSend && (ch.UserChats.Any(uch => uch.UserId == SenderId)) && (ch.UserChats.Any(uch => uch.UserId == user.Id))).FirstOrDefault();
 
-            if(chatForSend != null)
+            if (chatForSend != null)
             {
                 await SendMessageToChatAsync(
                            new SendMessageToChatDto
@@ -172,10 +172,12 @@ namespace Chat.BusinessLogic.Services
                 using (var transaction = await _unitOfWork.BeginTransactionAsync())
                 {
                     chatForSend = await _unitOfWork.ChatRepository.AddAsync(new Contracts.Entity.Chat { DefaultChat = true, Public = sendMessageToUserDto.PublicSend });
+                    await _unitOfWork.CommitAsync();
                     var userChatSneder = await _unitOfWork.UserChatRepository.AddAsync(new UserChat { ChatId = chatForSend.Id, UserId = SenderId });
                     var userChatReciever = await _unitOfWork.UserChatRepository.AddAsync(new UserChat { ChatId = chatForSend.Id, UserId = user.Id });
                     chatForSend.UserChats.Add(userChatSneder);
                     chatForSend.UserChats.Add(userChatReciever);
+                    await _unitOfWork.CommitAsync();
                     await transaction.CommitAsync();
                 }
 
@@ -190,6 +192,17 @@ namespace Chat.BusinessLogic.Services
                 return;
             }
         }
+
+        private static bool? ChatContainUser(User user, Contracts.Entity.Chat chatForSend)
+        {
+            return chatForSend.UserChats?.Any(uch => uch.UserId == user.Id);
+        }
+
+        private static bool? ChatContainUser(string userId, Contracts.Entity.Chat chatForSend)
+        {
+            return chatForSend.UserChats?.Any(uch => uch.UserId == userId);
+        }
+
         public async Task DeleteMessage(DeleteMessageDto deleteMessageDto, string userId)
         {
             if(deleteMessageDto.DeleteForAll == false && deleteMessageDto.DeleteForSender == false)
@@ -212,6 +225,33 @@ namespace Chat.BusinessLogic.Services
             {
                 message.DeletedForAll = deleteMessageDto.DeleteForAll;
                 message.DeletedForSender = deleteMessageDto.DeleteForSender;
+                await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
+            }
+        }
+
+        public async Task UpdateMessage(UpdateMessageDto updateMessageDto, string userId)
+        {
+            var message = await _unitOfWork.MessageRepository.GetByIdAsync(updateMessageDto.MessageID);
+
+            if (message == null)
+            {
+                throw new Exception("Message doesn't exist");
+            }
+
+            if (message.SenderId != userId || message.DeletedForAll || message.DeletedForSender)
+            {
+                throw new Exception("You can't update this message");
+            }
+
+            if (string.IsNullOrEmpty(updateMessageDto.Message))
+            {
+                throw new ArgumentException("You message text is incorrect");
+            }
+
+            using (var transaction = await _unitOfWork.BeginTransactionAsync())
+            {
+                message.MessageData = updateMessageDto.Message;
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
             }

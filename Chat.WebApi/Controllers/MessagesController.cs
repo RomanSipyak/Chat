@@ -39,7 +39,7 @@ namespace Chat.WebApi.Controllers
             {
                 var userId = this.User.Claims.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
                 await _messagesService.SendMessageToChatAsync(sendMessageDto, userId);
-                return Ok("Your Message succes send");
+                return Ok("Your Message success send");
             }catch(Exception ex)
             {
                 _logger.Error(ex);
@@ -55,7 +55,15 @@ namespace Chat.WebApi.Controllers
             {
                 var userId = this.User.Claims.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
                 await _messagesService.SendMessageToUserAsync(sendMessageToUserDto, userId);
-                return Ok("Your Message succes send");
+                return Ok("Your Message success send");
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
         [HttpDelete("DeleteMessage")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> DeleteMessage(DeleteMessageDto deleteMessageDto)
@@ -72,6 +80,16 @@ namespace Chat.WebApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [HttpPatch("UpdateMessage")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult> DeleteMessage(UpdateMessageDto updateMessageDto)
+        {
+            try
+            {
+                var userId = this.User.Claims.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+                await _messagesService.UpdateMessage(updateMessageDto, userId);
+                return Ok("Your Message is updated");
             }
             catch (Exception ex)
             {

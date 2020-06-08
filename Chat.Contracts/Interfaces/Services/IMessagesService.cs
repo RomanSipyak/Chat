@@ -11,5 +11,6 @@ namespace Chat.Contracts.Interfaces.Services
         Task SendMessageToChatAsync(SendMessageToChatDto sendMessageDto, string SenderId);
         Task SendMessageToUserAsync(SendMessageToUserDto sendMessageToUserDto, string SenderId);
         Task DeleteMessage(DeleteMessageDto deleteMessageDto, string userId);
+        Task UpdateMessage(UpdateMessageDto updateMessageDto, string userId);  
     }
 }
