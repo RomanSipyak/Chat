@@ -151,7 +151,7 @@ namespace Chat.WebApi.Controllers
             {
                 var userId = this.User.Claims.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
                 await _messagesService.ReplyMessage(replyMessageDto, userId);
-                return Ok("Your reply on message");
+                return Ok("Your send your reply for message");
             }
             catch (Exception ex)
             {
@@ -170,7 +170,7 @@ namespace Chat.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<GetMessageDto>> GeMessagesForChat(int ChatId, [FromQuery] PaginationFilterDto pagination)
+        public async Task<ActionResult<GetMessageDto>> GetMessagesForChat(int ChatId, [FromQuery] PaginationFilterDto pagination)
         {
             try
             {

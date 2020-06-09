@@ -25,6 +25,34 @@
             <param name="connectChatDto">Consist of Title and Id Chat. Id is required parameter</param>
             <returns>Status</returns>
         </member>
+        <member name="M:Chat.WebApi.Controllers.MessagesController.SendMessageToChat(Chat.Contracts.Dtos.Message.SendMessageToChatDto)">
+            <summary>
+            Send Message to chat 
+            </summary>
+            <param name="sendMessageDto">Contains all information about chat where we want to send our message</param>
+            <returns>Return status about condition of sendToChatAction</returns>
+        </member>
+        <member name="M:Chat.WebApi.Controllers.MessagesController.SendMessageToUser(Chat.Contracts.Dtos.Message.SendMessageToUserDto)">
+            <summary>
+            Send Message to user 
+            </summary>
+            <param name="sendMessageToUserDto">Contains all information about where we want to send and hom we want to send our message</param>
+            <returns>Return status about condition of sendToUserAction</returns>
+        </member>
+        <member name="M:Chat.WebApi.Controllers.MessagesController.DeleteMessage(Chat.Contracts.Dtos.Message.DeleteMessageDto)">
+            <summary>
+            Delete message If It is possible
+            </summary>
+            <param name="deleteMessageDto">Contains Id and options for deleteing our message</param>
+            <returns>Return status about condition of deleteAction.</returns>
+        </member>
+        <member name="M:Chat.WebApi.Controllers.MessagesController.UpdateMessage(Chat.Contracts.Dtos.Message.UpdateMessageDto)">
+            <summary>
+            Update message if it is possible
+            </summary>
+            <param name="updateMessageDto">This Dto contains All Information about messsage that we want to update</param>
+            <returns>Return status 200 if your message is updated</returns>
+        </member>
         <member name="M:Chat.WebApi.Controllers.MessagesController.ReplyForMessage(Chat.Contracts.Dtos.Message.ReplyMessageDto)">
             <summary>
             Reply for message chat.
@@ -40,6 +68,14 @@
             </summary>
             <param name="replyMessageDto">Dto for reply message</param>
             <returns>ActionResult with staus 200 if all good</returns>
+        </member>
+        <member name="M:Chat.WebApi.Controllers.MessagesController.GetMessagesForChat(System.Int32,Chat.Contracts.Dtos.PaginationFilterDto)">
+            <summary>
+            Get all messages for chat 
+            </summary>
+            <param name="ChatId">This is Id Chat with messages</param>
+            <param name="pagination">This is filter with count of elements and number of page</param>
+            <returns>GetMessageDto that contain information about our messages</returns>
         </member>
     </members>
 </doc>
