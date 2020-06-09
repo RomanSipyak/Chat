@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chat.Contracts.Constats.ControllersConstants;
 using Chat.Contracts.Dtos.Chat;
 using Chat.Contracts.Interfaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -40,11 +41,11 @@ namespace Chat.WebApi.Controllers
             try
             {
                 await _chatService.AddUserToChatAsync(connectChatDto, userId);
-                return Ok("You are added in chat");
+                return Ok(ChatControllerConstants.YouAreAddedToChat);
             } catch (Exception ex)
             {
                 _logger.Error(ex);
-                return StatusCode(StatusCodes.Status500InternalServerError, "Can't add uset to chat");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.InnerException.Message);
             }
         }
 

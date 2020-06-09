@@ -51,7 +51,7 @@ namespace Chat.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                //_logger.Error(ex);
+                _logger.Error(ex);
 
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     AccountControllerConstants.RegisterUser_ErrorMessage);
