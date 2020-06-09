@@ -6,6 +6,6 @@ namespace Chat.Contracts.Dtos
 {
     public class BaseDto<T>
     {
-        T Id;
+        public T Id;
     }
 }

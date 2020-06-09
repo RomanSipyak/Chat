@@ -170,7 +170,7 @@ namespace Chat.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<GetMessageDto>> GetMessagesForChat(int ChatId, [FromQuery] PaginationFilterDto pagination)
+        public async Task<ActionResult<ICollection<GetMessageDto>>> GetMessagesForChat(int ChatId, [FromQuery] PaginationFilterDto pagination)
         {
             try
             {

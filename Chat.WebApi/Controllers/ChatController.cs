@@ -39,12 +39,34 @@ namespace Chat.WebApi.Controllers
             var userId = this.User.Claims.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
             try
             {
-                await _chatService.AddUserToChatAsync(connectChatDto, "userId");
+                await _chatService.AddUserToChatAsync(connectChatDto, userId);
                 return Ok("You are added in chat");
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 _logger.Error(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, "Can't add uset to chat");
+            }
+        }
+
+        /// <summary>
+        /// Get All chats for User
+        /// </summary>
+        /// <returns>Collection of GetChatDto</returns>
+        [HttpGet("GetAllChatsForUser")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<ICollection<GetChatDto>>> GetAllChatsForUser()
+        {
+            var userId = this.User.Claims.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+            try
+            {
+                return Ok(await _chatService.GetAllChatsForUserAsync(userId));
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.InnerException.Message);
             }
         }
     }

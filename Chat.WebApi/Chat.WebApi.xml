@@ -25,6 +25,12 @@
             <param name="connectChatDto">Consist of Title and Id Chat. Id is required parameter</param>
             <returns>Status</returns>
         </member>
+        <member name="M:Chat.WebApi.Controllers.ChatController.GetAllChatsForUser">
+            <summary>
+            Get All chats for User
+            </summary>
+            <returns>Collection of GetChatDto</returns>
+        </member>
         <member name="M:Chat.WebApi.Controllers.MessagesController.SendMessageToChat(Chat.Contracts.Dtos.Message.SendMessageToChatDto)">
             <summary>
             Send Message to chat 

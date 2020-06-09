@@ -5,8 +5,10 @@ using Chat.Contracts.Interfaces;
 using Chat.Contracts.Interfaces.Services;
 using Chat.Infrastructure.AppContext.Persistence;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,6 +42,17 @@ namespace Chat.BusinessLogic.Services
             });
 
             await _unitOfWork.CommitAsync();
+        }
+
+        public async Task<ICollection<GetChatDto>> GetAllChatsForUserAsync(string userId)
+        {
+            var chats = _unitOfWork.ChatRepository.Find(ch => ch.UserChats.Any(uch => uch.UserId == userId)).ToList(); ;
+            ICollection<GetChatDto> listChatsDto = new List<GetChatDto>();
+            foreach (var chat in chats)
+            {
+                listChatsDto.Add(_mapper.Map<GetChatDto>(chat));
+            }
+            return listChatsDto;
         }
     }
 }

@@ -9,5 +9,6 @@ namespace Chat.Contracts.Interfaces.Services
     public interface IChatService
     {
         Task AddUserToChatAsync(ConnectChatDto connectChatDto, string userId);
+        Task<ICollection<GetChatDto>> GetAllChatsForUserAsync(string userId);
     }
 }
