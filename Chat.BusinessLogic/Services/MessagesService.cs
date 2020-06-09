@@ -366,6 +366,10 @@ namespace Chat.BusinessLogic.Services
                 List<GetMessageDto> getMessagesDto = new List<GetMessageDto>();
                 foreach (var chatMessage in chatMessageList)
                 {
+                    if(chatMessage.Message.DeletedForAll || (chatMessage.Message.DeletedForSender && chatMessage.Message.SenderId == userId))
+                    {
+                        continue;
+                    }
                     var messageDTO = _mapper.Map<GetMessageDto>(chatMessage.Message);
                     messageDTO.SendDate = chatMessage.DateSend;
                     getMessagesDto.Add(messageDTO);

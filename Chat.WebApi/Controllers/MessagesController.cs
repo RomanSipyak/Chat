@@ -32,7 +32,14 @@ namespace Chat.WebApi.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Send Message to chat 
+        /// </summary>
+        /// <param name="sendMessageDto">Contains all information about chat where we want to send our message</param>
+        /// <returns>Return status about condition of sendToChatAction</returns>
         [HttpPost("SendMessageToChat")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> SendMessageToChat(SendMessageToChatDto sendMessageDto)
         {
@@ -48,7 +55,14 @@ namespace Chat.WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Send Message to user 
+        /// </summary>
+        /// <param name="sendMessageToUserDto">Contains all information about where we want to send and hom we want to send our message</param>
+        /// <returns>Return status about condition of sendToUserAction</returns>
         [HttpPost("SendMessageToUser")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> SendMessageToUser(SendMessageToUserDto sendMessageToUserDto)
         {
@@ -65,7 +79,14 @@ namespace Chat.WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete message If It is possible
+        /// </summary>
+        /// <param name="deleteMessageDto">Contains Id and options for deleteing our message</param>
+        /// <returns>Return status about condition of deleteAction.</returns>
         [HttpDelete("DeleteMessage")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> DeleteMessage(DeleteMessageDto deleteMessageDto)
         {
@@ -82,7 +103,14 @@ namespace Chat.WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Update message if it is possible
+        /// </summary>
+        /// <param name="updateMessageDto">This Dto contains All Information about messsage that we want to update</param>
+        /// <returns>Return status 200 if your message is updated</returns>
         [HttpPatch("UpdateMessage")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> UpdateMessage(UpdateMessageDto updateMessageDto)
         {
@@ -114,6 +142,8 @@ namespace Chat.WebApi.Controllers
         /// <param name="replyMessageDto">Dto for reply message</param>
         /// <returns>ActionResult with staus 200 if all good</returns>
         [HttpPost("ReplyOnMessage")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> ReplyForMessage(ReplyMessageDto replyMessageDto)
         {
@@ -130,7 +160,15 @@ namespace Chat.WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all messages for chat 
+        /// </summary>
+        /// <param name="ChatId">This is Id Chat with messages</param>
+        /// <param name="pagination">This is filter with count of elements and number of page</param>
+        /// <returns>GetMessageDto that contain information about our messages</returns>
         [HttpGet("GetMessagesForChat")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<GetMessageDto>> GeMessagesForChat(int ChatId, [FromQuery] PaginationFilterDto pagination)
         {
